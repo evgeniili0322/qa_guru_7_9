@@ -1,13 +1,13 @@
 import allure
 from allure_commons.types import Severity
-from selene import browser, be, by
+from selene import browser, by, have
 
 
 @allure.tag('Web')
 @allure.severity(Severity.CRITICAL)
 @allure.label('owner', 'Evgenii Li')
 @allure.feature('Issues')
-@allure.story('Find issue #80 in repository')
+@allure.story('Issue #80 in repository should have name "e.sh"')
 @allure.link('https://github.com')
 def test_check_issue_name(browser_opt):
     browser.open('')
@@ -21,14 +21,14 @@ def test_check_issue_name(browser_opt):
     browser.element('#issues-tab').click()
 
     # Assert
-    browser.element('.js-navigation-container').element(by.partial_text('#80')).should(be.visible)
+    browser.element('#issue_80').should(have.text('e.sh'))
 
 
 @allure.tag('Web')
 @allure.severity(Severity.BLOCKER)
 @allure.label('owner', 'Evgenii Li')
 @allure.feature('Issues')
-@allure.story('Find issue #76 in repository')
+@allure.story('Issue #76 in repository should have name "С Новым Годом (2022)"')
 @allure.link('https://github.com')
 def test_check_issue_name_dynamic_steps(browser_opt):
     with allure.step('Open main page'):
@@ -44,22 +44,22 @@ def test_check_issue_name_dynamic_steps(browser_opt):
     with allure.step('Open "Issues" tab'):
         browser.element('#issues-tab').click()
 
-    with allure.step('Check if issue with #76 visible'):
-        browser.element('.js-navigation-container').element(by.partial_text('#76')).should(be.visible)
+    with allure.step('Check issue with #76 have name "С Новым Годом (2022)"'):
+        browser.element('#issue_76').should(have.text('С Новым Годом (2022)'))
 
 
 @allure.tag('Web')
 @allure.severity(Severity.NORMAL)
 @allure.label('owner', 'Evgenii Li')
 @allure.feature('Issues')
-@allure.story('Find issue #78 in repository')
+@allure.story('Issue #68 in repository should have name "Listeners NamedBy"')
 @allure.link('https://github.com')
 def test_check_issue_name_decorator_steps(browser_opt):
     open_main_page()
     search_repository('eroshenkoam/allure-example')
     got_to_repository('eroshenkoam/allure-example')
     open_issues_tab()
-    issue_should_be_visible(78)
+    issue_should_have_name(68)
 
 
 @allure.step('Open main page')
@@ -83,6 +83,6 @@ def open_issues_tab():
     browser.element('#issues-tab').click()
 
 
-@allure.step('Check if issue with #{issue_number} visible')
-def issue_should_be_visible(issue_number):
-    browser.element('.js-navigation-container').element(by.partial_text(f'#{issue_number}')).should(be.visible)
+@allure.step('Check issue with #{issue_number} have name "Listeners NamedBy"')
+def issue_should_have_name(issue_number):
+    browser.element(f'#issue_{issue_number}').should(have.text('Listeners NamedBy'))
